@@ -1,0 +1,36 @@
+---
+- name: homework1
+  hosts: homework1servers
+  become: yes
+  tasks:
+  - name: install python
+    apt:
+      name: python
+      state: present
+
+  - name: install nginx
+    apt:
+      name: nginx
+      state: present
+
+  - name: init nginx
+    service: 
+       name: nginx 
+       state: started
+
+  - name: destination 
+    set_fact: remote_file_path=/var/www/html/index.html
+
+  - name: init html content
+    set_fact: file_content="<html> <h1> Hello World, we are team Final Countdown! </h1> </html>"
+
+  - name: default index
+    file: path={{ remote_file_path }} state=touch
+    
+  - name: remote file
+    stat: path="{{ remote_file_path }}"
+    register: file_path
+
+  - name: hello world
+    copy: content="{{ file_content }}" dest="{{ remote_file_path }}"
+    when: file_path.stat.exists == true

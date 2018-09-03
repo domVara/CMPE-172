@@ -1,0 +1,21 @@
+---
+- name: 
+  hosts: homework1servers
+  become: true
+  tasks:
+
+  - name: nginx terminate
+    service: 
+       name: nginx 
+       state: stopped
+ 
+  - name: nginx uninstall
+    apt:
+      name: nginx
+      state: absent
+
+  - name: destory index
+    file: path=/var/www/html state=absent
+
+  - name: html dir
+    file: path=/var/www/html state=directory
